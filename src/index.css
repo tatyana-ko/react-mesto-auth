@@ -65,3 +65,12 @@ code {
 @import url(./blocks/button-hover/button-hover.css);
 @import url(./blocks/popup/_type/popup_type_delete-card.css);
 @import url(./blocks/popup/_type/popup_type_update-avatar.css);
+/* Authorization Page */
+@import url(./blocks/authorization/authorization.css);
+@import url(./blocks/authorization/__button/authorization__button.css);
+@import url(./blocks/authorization/__container/authorization__container.css);
+@import url(./blocks/authorization/__form/authorization__form.css);
+@import url(./blocks/authorization/__input/authorization__input.css);
+@import url(./blocks/authorization/__link/authorization__link.css);
+@import url(./blocks/authorization/__subtitle/authorization__subtitle.css);
+@import url(./blocks/authorization/__title/authorization__title.css);

@@ -9,6 +9,8 @@ import api from "../utils/api";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import Register from "./Register";
+import Login from "./Login"
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -153,7 +155,7 @@ function App() {
 
           <Header />
 
-          <Main
+          {/* <Main
             cards={cards}
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
@@ -161,7 +163,10 @@ function App() {
             onCardClick={handleCardClick}
             onCardLike={handleCardLike}
             onCardDelete={handleCardDelete}
-          />
+          /> */}
+
+          <Register></Register>
+          {/* <Login></Login> */}
 
           <Footer />
 
