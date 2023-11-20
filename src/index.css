@@ -74,3 +74,6 @@ code {
 @import url(./blocks/authorization/__link/authorization__link.css);
 @import url(./blocks/authorization/__subtitle/authorization__subtitle.css);
 @import url(./blocks/authorization/__title/authorization__title.css);
+/* Tooltip */
+@import url(./blocks/popup/__tooltip-image/popup__tooltip-image.css);
+@import url(./blocks/popup/__tooltip-text/popup__tooltip-text.css);

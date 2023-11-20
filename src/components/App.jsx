@@ -10,12 +10,17 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import Register from "./Register";
-import Login from "./Login"
+import Login from "./Login";
+import InfoTooltip from "./InfoTooltip";
+import success from "../images/sucсess.svg";
+import error from "../images/error.svg";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isSuccessTooltipAvatarPopupOpen, setIsSuccessTooltipAvatarPopupOpen] = useState(false);
+  const [isErrorTooltipAvatarPopupOpen, setIsErrorTooltipAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
@@ -58,6 +63,8 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsSuccessTooltipAvatarPopupOpen(false);
+    setIsErrorTooltipAvatarPopupOpen(false);
     setSelectedCard({});
   }
 
@@ -142,6 +149,8 @@ function App() {
       });
   }
 
+  
+
   //Функция проверки наличия jwt
   // tokenCheck
 
@@ -150,8 +159,6 @@ function App() {
       <div className="body">
         <div className="page">
           {/* <Routes></Routes> */}
-
-
 
           <Header />
 
@@ -165,8 +172,23 @@ function App() {
             onCardDelete={handleCardDelete}
           /> */}
 
-          <Register></Register>
+          {/* <Register></Register> */}
           {/* <Login></Login> */}
+          <InfoTooltip
+            isOpen={isSuccessTooltipAvatarPopupOpen}
+            onClose={closeAllPopups}
+            text={"Вы успешно зарегистрировались!"}
+            image={success}
+          ></InfoTooltip>
+
+          <InfoTooltip
+            isOpen={isErrorTooltipAvatarPopupOpen}
+            onClose={closeAllPopups}
+            text={"Что-то пошло не так! Попробуйте ещё раз!"}
+            image={error}
+          ></InfoTooltip>
+            
+        
 
           <Footer />
 
