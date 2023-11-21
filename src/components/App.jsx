@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
-import Main from "./Main";
-import Footer from "./Footer";
-import PopupWithForm from "./PopupWithForm";
-import ImagePopup from "./ImagePopup";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import api from "../utils/api";
+import * as auth from "../utils/auth";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import PopupWithForm from "./PopupWithForm";
+import ImagePopup from "./ImagePopup";
+import Header from "./Header";
+import Main from "./Main";
+import Footer from "./Footer";
 import Register from "./Register";
 import Login from "./Login";
+import ProtectedRoute from "./ProtectedRoute";
 import InfoTooltip from "./InfoTooltip";
 import success from "../images/sucсess.svg";
 import error from "../images/error.svg";
@@ -19,11 +22,16 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [isSuccessTooltipAvatarPopupOpen, setIsSuccessTooltipAvatarPopupOpen] = useState(false);
-  const [isErrorTooltipAvatarPopupOpen, setIsErrorTooltipAvatarPopupOpen] = useState(false);
+  const [isSuccessTooltipPopupOpen, setIsSuccessTooltipPopupOpen] =
+    useState(false);
+  const [isErrorTooltipPopupOpen, setIsErrorTooltipPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     api
@@ -47,6 +55,10 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    checkToken();
+  }, []);
+
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -63,8 +75,8 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-    setIsSuccessTooltipAvatarPopupOpen(false);
-    setIsErrorTooltipAvatarPopupOpen(false);
+    setIsSuccessTooltipPopupOpen(false);
+    setIsErrorTooltipPopupOpen(false);
     setSelectedCard({});
   }
 
@@ -149,18 +161,86 @@ function App() {
       });
   }
 
-  
+  // Функция проверки наличия jwt
+  function checkToken() {
+    const jwt = localStorage.getItem("jwt");
 
-  //Функция проверки наличия jwt
-  // tokenCheck
+    if (jwt) {
+      auth
+        .checkToken(jwt)
+        .then((response) => {
+          if (response) {
+            setLoggedIn(true);
+            setUserEmail(response.data.email);
+            navigate("/", { replace: true });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  function handleRegister(email, password) {
+    auth
+      .register(email, password)
+      .then(() => {
+        setIsSuccessTooltipPopupOpen(true);
+        navigate("/sign-in", { replace: true });
+      })
+      .catch((error) => {
+        console.log("Ошибка регистрации");
+        setIsErrorTooltipPopupOpen(true);
+      });
+  }
+
+  function handleLogin(email, password) {
+    auth.login(email, password).then((data) => {
+      console.log(data)
+      setLoggedIn(true);
+      setUserEmail(email);
+      localStorage.setItem("jwt", data.token);
+      navigate("/", { replace: true });
+    }).catch((error) => {console.log(error)})
+  }
+
+  function handleSignout() {
+    localStorage.removeItem("jwt");
+    setLoggedIn(false);
+    navigate("/sign-in", { replace: true });
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="body">
         <div className="page">
-          {/* <Routes></Routes> */}
-
-          <Header />
+          <Header email={userEmail} handleSignout={handleSignout} />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute
+                  element={Main}
+                  loggedIn={loggedIn}
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+              }
+            />
+            <Route
+              path="/sign-up"
+              element={<Register handleRegister={handleRegister} />}
+            />
+            <Route
+              path="/sign-in"
+              element={<Login handleLogin={handleLogin} />}
+            />
+          </Routes>
 
           {/* <Main
             cards={cards}
@@ -172,25 +252,21 @@ function App() {
             onCardDelete={handleCardDelete}
           /> */}
 
-          {/* <Register></Register> */}
-          {/* <Login></Login> */}
+          <Footer />
+
           <InfoTooltip
-            isOpen={isSuccessTooltipAvatarPopupOpen}
+            isOpen={isSuccessTooltipPopupOpen}
             onClose={closeAllPopups}
             text={"Вы успешно зарегистрировались!"}
             image={success}
           ></InfoTooltip>
 
           <InfoTooltip
-            isOpen={isErrorTooltipAvatarPopupOpen}
+            isOpen={isErrorTooltipPopupOpen}
             onClose={closeAllPopups}
             text={"Что-то пошло не так! Попробуйте ещё раз!"}
             image={error}
           ></InfoTooltip>
-            
-        
-
-          <Footer />
 
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}

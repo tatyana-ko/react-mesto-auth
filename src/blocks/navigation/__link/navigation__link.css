@@ -1,0 +1,9 @@
+.navigation__link {
+  margin-left: 24px;
+  font-family: 'Inter';
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: #A9A9A9;
+  text-decoration: none;
+}
