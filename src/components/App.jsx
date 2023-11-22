@@ -161,7 +161,6 @@ function App() {
       });
   }
 
-  // Функция проверки наличия jwt
   function checkToken() {
     const jwt = localStorage.getItem("jwt");
 
@@ -188,7 +187,7 @@ function App() {
         setIsSuccessTooltipPopupOpen(true);
         navigate("/sign-in", { replace: true });
       })
-      .catch((error) => {
+      .catch(() => {
         console.log("Ошибка регистрации");
         setIsErrorTooltipPopupOpen(true);
       });
@@ -196,7 +195,6 @@ function App() {
 
   function handleLogin(email, password) {
     auth.login(email, password).then((data) => {
-      console.log(data)
       setLoggedIn(true);
       setUserEmail(email);
       localStorage.setItem("jwt", data.token);
@@ -241,16 +239,6 @@ function App() {
               element={<Login handleLogin={handleLogin} />}
             />
           </Routes>
-
-          {/* <Main
-            cards={cards}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-          /> */}
 
           <Footer />
 
